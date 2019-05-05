@@ -6,7 +6,10 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+import random
+from .settings import IPPOOL,UAPOOL
+from scrapy.downloadermiddlewares.httpproxy import HttpProxyMiddleware
+from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
 
 class ScrapAuthorSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -101,3 +104,25 @@ class ScrapAuthorDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+# -*- coding: utf-8 -*-
+# 导入随机模块
+
+# 导入官方文档对应的HttpProxyMiddleware
+
+
+class IPPOOLS(HttpProxyMiddleware):
+    def __init__(self, ip=''):
+        self.ip = ip
+    def process_request(self, request, spider):
+        thisip = random.choice(IPPOOL)
+        print("当前使用IP是："+ thisip["ipaddr"])
+        request.meta["proxy"] = "http://"+thisip["ipaddr"]
+
+class Uamid(UserAgentMiddleware): 
+    def __init__(self, user_agent=''):
+        self.user_agent = user_agent
+    def process_request(self, request, spider):
+        thisua = random.choice(UAPOOL)
+        print("当前使用User-Agent是："+thisua)
+        request.headers.setdefault('User-Agent',thisua)

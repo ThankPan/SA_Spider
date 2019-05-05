@@ -8,6 +8,10 @@
 from scrapy.exceptions import DropItem
 from .spiders.scrap_authors import author,article
 import json
+
+articleset=set()
+authorset=set()
+
 """
 class ScrapAuthorPipeline(object):
     def process_item(self, item, spider):
@@ -45,9 +49,13 @@ class ArticleJsonWriterPipeline(object):
         if not isinstance(item,article):
             return item
         else:
-            line = json.dumps(dict(item),ensure_ascii=False) + "\n"
-            self.file.write(line.encode('utf-8'))
-            return item
+            if item['url'] not in articleset:
+                articleset.add(item['url']) 
+                line = json.dumps(dict(item),ensure_ascii=False) + "\n"
+                self.file.write(line.encode('utf-8'))
+                return item
+            else:
+                raise DropItem
 
 class AuthorJsonWriterPipeline(object):
 
@@ -61,6 +69,10 @@ class AuthorJsonWriterPipeline(object):
         if not isinstance(item,author):
             return item
         else:
-            line = json.dumps(dict(item),ensure_ascii=False) + "\n"
-            self.file.write(line.encode('utf-8'))
-            return item
+            if item['name'] not in authorset:
+                authorset.add(item['name'])
+                line = json.dumps(dict(item),ensure_ascii=False) + "\n"
+                self.file.write(line.encode('utf-8'))
+                return item
+            else:
+                raise DropItem

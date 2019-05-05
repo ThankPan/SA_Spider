@@ -51,9 +51,13 @@ FEED_EXPORT_ENCODING='utf-8'
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+DOWNLOADER_MIDDLEWARES = {
 #    'scrap_author.middlewares.ScrapAuthorDownloaderMiddleware': 543,
-#}
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware':123,
+    'scrap_author.middlewares.IPPOOLS':125,
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware':2,
+    'scrap_author.middlewares.Uamid':1,
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -91,3 +95,18 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+IPPOOL=[]
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+f = open(os.path.join(__location__, 'valid_ip_1.txt'));
+lines=f.readlines()
+for i in range(len(lines)):
+    addr={"ipaddr":lines[i]}
+    IPPOOL.append(addr)
+
+UAPOOL = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
+    "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5",
+    "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0"
+]

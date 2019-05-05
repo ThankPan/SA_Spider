@@ -37,7 +37,7 @@ class AuthorSpider(CrawlSpider):
 
     def parse_author(self, response):
         au=author()
-        au['name']=response.css('#gsc_prf_in::text').extract()
+        au['name']=response.css('#gsc_prf_in::text').get()
         au['citations']=response.css('.gsc_rsb_std::text').get()
         au['image_urls']=[response.urljoin(response.css('#gsc_prf_pua img::attr(src)').get())]
         if response.css('.gsc_rsb_aa').get() is not None:
